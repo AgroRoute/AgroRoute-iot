@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "author": "AgroRoute",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 57.6, "left": 33.64, "attrs": {} },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -18.9,
+      "left": -53.4,
+      "attrs": { "temperature": "51.1" }
+    },
+    { "type": "wokwi-bme280-breakout", "id": "bme1", "top": 180, "left": 50, "attrs": {} },
+    { "type": "chip-gps-agroroute", "id": "chip1", "top": -8.58, "left": 148.8, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "dht1:SDA", "esp:12", "green", [ "v0" ] ],
+    [ "dht1:VCC", "esp:5V", "red", [ "v0" ] ],
+    [ "dht1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "esp:3V3", "chip1:VCC", "red", [ "v-86.4", "h105.75" ] ],
+    [ "chip1:GND", "esp:GND.2", "black", [ "h0" ] ],
+    [ "esp:3V3", "bme1:VCC", "red", [ "v-86.4", "h105.75" ] ],
+    [ "bme1:GND", "esp:GND.2", "black", [ "h0" ] ],
+    [ "bme1:TX", "esp:22", "green", [ "v0" ] ],
+    [ "bme1:RX", "esp:21", "green", [ "h21.01", "v134.4" ] ],
+    [ "esp:21", "chip1:TX", "green", [ "h144", "v-124.8" ] ],
+    [ "chip1:RX", "esp:22", "green", [ "h30.61", "v105.6" ] ]
+  ],
+  "dependencies": {}
+}
