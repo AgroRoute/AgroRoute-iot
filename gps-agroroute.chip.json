@@ -1,0 +1,12 @@
+{
+  "name": "GPS AgroRoute",
+  "author": "Arvind Patil",
+  "pins": [
+    "VCC",
+    "GND",
+    "TX",
+    "RX"
+
+  ],
+  "controls": []
+}

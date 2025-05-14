@@ -1,0 +1,5 @@
+# Wokwi Library List
+WiFi
+HTTPClient
+ArduinoJson
+DHT sensor library for ESPx
