@@ -4,13 +4,13 @@
 static DHTesp dht;
 
 void initSensors() {
-    dht.setup(12, DHTesp::DHT22);
+  dht.setup(12, DHTesp::DHT22);
 }
 
 SensorData readSensors() {
-    SensorData d;
-    auto dh = dht.getTempAndHumidity();
-    d.temp = dh.temperature;
-    d.hum  = dh.humidity;
-    return d;
+  SensorData d;
+  auto dh = dht.getTempAndHumidity();
+  d.temp = dh.temperature;
+  d.hum  = dh.humidity;
+  return d;
 }
