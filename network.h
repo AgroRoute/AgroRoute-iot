@@ -8,7 +8,7 @@
 
 #define ENDPOINT_MONITORING  "http://38.25.66.132:8000/api/v1/monitoring/data-records"
 
-#define MQTT_BROKER          "test.mosquitto.org"
+#define MQTT_BROKER          "38.25.66.132"
 #define MQTT_PORT            1883
 
 extern uint8_t PIN_FAN;
