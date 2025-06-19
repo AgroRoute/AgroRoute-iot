@@ -1,0 +1,13 @@
+{
+  "name": "chip-humidifier",
+  "author": "branco alberto villegas peralta",
+  "pins": [
+    "IN",
+    "VCC",
+    "GND",
+    "",
+    "",
+    ""
+  ],
+  "controls": []
+}

@@ -2,11 +2,14 @@
   "name": "GPS AgroRoute",
   "author": "Arvind Patil",
   "pins": [
-    "VCC",
     "GND",
+    "VCC",
+    "RX",
     "TX",
-    "RX"
-
+    "",
+    "",
+    "",
+    ""
   ],
   "controls": []
 }

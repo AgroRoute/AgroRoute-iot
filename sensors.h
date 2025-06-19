@@ -3,11 +3,11 @@
 
 #include <Arduino.h>
 struct SensorData {
-    float temp;
-    float hum;
+  float temp;
+  float hum;
 };
 
 void initSensors();
 SensorData readSensors();
 
-#endif
+#endif 

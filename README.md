@@ -8,51 +8,78 @@ Este proyecto simula un dispositivo IoT que:
 
 * Mide temperatura y humedad con un **DHT22**.
 * Simula datos de ubicación GPS mediante un **custom‑chip** (`gps-agroroute`).
-* Publica un JSON con estos datos a un endpoint REST.
+* Controla y simula actuadores: **ventilador**, **humidificador** y **calefactor**, cada uno con su propio LED indicador.
+* Publica un JSON con los datos de sensores a un endpoint REST.
 
-## Enlace al proyecto Wokwi
+## 📎 Enlace al proyecto Wokwi
 
 [Ver y editar en Wokwi](https://wokwi.com/projects/430893166627987457)
 
-## Estructura de archivos
+## 🗂 Estructura de archivos
 
-* **diagram.json**: Configuración del esquema de simulación (ESP32, DHT22, custom‑chip GPS).
-* **libraries.txt**: Bibliotecas necesarias para Wokwi.
-* **gps-agroroute.chip.json** / **gps-agroroute.chip.c**: Definición y lógica del GPS simulado.
-* **sensors.h** / **sensors.cpp**: Lectura del sensor DHT22.
-* **network.h** / **network.cpp**: Conexión Wi-Fi y envío de datos al endpoint.
-* **agroroute.ino**: Sketch principal que orquesta la lectura, parseo de NMEA y envío.
+```
+├── diagram.json                      # Configuración de la simulación (ESP32, DHT22, chips, LEDs)
+├── libraries.txt                     # Bibliotecas necesarias para Wokwi (WiFi, HTTPClient, ArduinoJson, PubSubClient, DHT)
+│
+├── gps-agroroute.chip.json/.c        # GPS custom‑chip que emite NMEA GPGGA simulada
+├── chip-fan.chip.json/.c             # Custom‑chip que imprime estado del ventilador
+├── chip-humidifier.chip.json/.c      # Custom‑chip que imprime estado del humidificador
+├── chip-heater.chip.json/.c          # Custom‑chip que imprime estado del calefactor
+│
+├── sensors.h / sensors.cpp           # Lectura de DHT22 (temperatura y humedad)
+├── network.h / network.cpp           # Módulo de red: Wi‑Fi, HTTP POST, MQTT SUBSCRIBE
+├── agroroute.ino                     # Sketch principal: orquesta sensores, GPS, red y actuadores
+│
+└── resources/images/demo.png         # Captura de pantalla de la simulación
+```
 
-## Instrucciones para ejecutar
+## 🔌 Cableado y LEDs indicadores
 
-1. Abre el proyecto en Wokwi haciendo clic en el enlace de arriba.
+* **DHT22** conectado a GPIO 12 (SDA), 3V3 y GND.
+* **GPS** (TX→GPIO 21, RX→GPIO 22).
+* **Ventilador (fan)** controlado por GPIO 17 + LED azul con resistencia 220 Ω a GND.
+* **Humidificador** controlado por GPIO 4 + LED verde con resistencia 220 Ω a GND.
+* **Calefactor** controlado por GPIO 15 + LED rojo con resistencia 220 Ω a GND.
+
+> Los LEDs se encienden cuando se activa el actuador (pin HIGH) y se apagan cuando se desactiva (pin LOW).
+
+## ▶️ Instrucciones para ejecutar
+
+1. Abre el proyecto en Wokwi con el enlace de arriba.
 2. Pulsa **Run**.
-3. Abre el **Serial Monitor** y selecciona **115200 bps**.
-4. Observa las lecturas de sensor y las peticiones POST al endpoint.
+3. Abre el **Serial Monitor** a **115200 bps**.
+4. Observa:
 
-## JSON enviado al endpoint
+   * Conexión Wi‑Fi y dirección IP.
+   * Suscripción MQTT a `agroroute/{device_id}/#`.
+   * Envío HTTP cada 5 s de telemetría (temperature, humidity, latitude, longitude).
+   * Recepción instantánea de comandos MQTT `fan`, `heater`, `humidifier` con logs y LEDs.
 
-Cada 5 segundos se envía un payload como:
+## 📤 Payload enviado al endpoint (cada 5 s)
 
 ```json
 {
-  "deviceId": "HC2947",
-  "dht22": {
-    "temperature": 24.3,
-    "humidity": 50.1
-  },
-  "gps": {
-    "lat": -12.0464,
-    "lon": -77.0428
-  }
+  "device_id": "agro-route-001",
+  "temperature": 24.3,
+  "humidity": 50.1,
+  "latitude": -12.0464,
+  "longitude": -77.0428,
+  "created_at": "2025-06-18T20:04:35.998179Z"
 }
 ```
 
-## Personalización
+## 🔄 Flujo completo de datos
 
-* Ajusta los pines del DHT22 o UART2 en `agroroute.ino` si cambias el cableado.
-* Modifica las sentencias NMEA en `gps-agroroute.chip.c` para simular diferentes rutas.
-* Actualiza la constante `ENDPOINT` en `network.cpp` para dirigir a tu API real.
+1. **ESP32** lee DHT22 y GPS, envía telemetría por HTTP al Edge Service.
+2. **Edge Service** (FastAPI) guarda localmente, dispara lógica de control (DDD), publica comandos MQTT.
+3. **ESP32** recibe vía MQTT y activa/desactiva pines de los actuadores y enciende LEDs.
+
+## ⚙️ Personalización
+
+* Cambia pines del DHT22, GPS o actuadores en `agroroute.ino` para otro cableado.
+* Ajusta umbrales de temperatura/humedad en `control/domain/services.py`.
+* Modifica `ENDPOINT_MONITORING` en `network.cpp` para tu API real.
+* Para enviar datos a la nube, configura la variable `CLOUD_MONITORING_ENDPOINT` en un `.env` y usa el adapter `CloudMonitoringClient`.
 
 ---
 

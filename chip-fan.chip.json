@@ -1,0 +1,14 @@
+{
+  "name": "chip-fan",
+  "author": "branco alberto villegas peralta",
+  "description": "Ventilador simulado para AgroRoute",
+  "pins": [
+    "VCC",
+    "GND",
+    "IN",
+    "",
+    "",
+    ""
+  ],
+  "controls": []
+}

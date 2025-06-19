@@ -3,3 +3,4 @@ WiFi
 HTTPClient
 ArduinoJson
 DHT sensor library for ESPx
+PubSubClient
